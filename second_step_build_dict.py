@@ -27,6 +27,7 @@ for idx, line in enumerate(codecs.open("pingshuiyun.list", "r", "utf-8")):
 			char[i] = temp
 		else:
 			temp = {}
+			temp[u"韵"] = i
 			temp[u"平水韵部"] = [idx]
 			temp[u"平水平仄"] = [pingze]
 			temp[u"平上去入"] = [psqr]
@@ -59,20 +60,20 @@ for idx, line in enumerate(codecs.open("cilinzhengyun.list", "r", "utf-8")):
 			print("Error", i)
 
 for i in char:
-	if len(i[u"平水平仄"]) == 2:
+	if len(char[i][u"平水平仄"]) == 2:
 		typ_a = 2
-	elif i[u"平水平仄"] == [0]:
+	elif char[i][u"平水平仄"] == [0]:
 		typ_a = 0
-	elif i[u"平水平仄"] == [1]:
+	elif char[i][u"平水平仄"] == [1]:
 		typ_a = 1
 	else:
 		print("Error")
 
-	if len(i[u"词林平仄"]) == 2:
+	if len(char[i][u"词林平仄"]) == 2:
 		typ_b = 2
-	elif i[u"词林平仄"] == [0]:
+	elif char[i][u"词林平仄"] == [0]:
 		typ_b = 0
-	elif i[u"词林平仄"] == [1]:
+	elif char[i][u"词林平仄"] == [1]:
 		typ_b = 1
 	else:
 		print("Error")
@@ -80,7 +81,7 @@ for i in char:
 	assert(typ_a == typ_b)
 	char[i][u"类型"] = typ_a
 
-char = sorted(char.items(), key=lambda c: c[u"平水韵部"])
+char = sorted(char.items(), key=lambda c: (c[1][u"平水韵部"], c[1][u"韵"]))
 with codecs.open("char_dict.json", "w", "utf-8") as fout:
 	for i in char:
-		fout.write(json.dumps(char[i], ensure_ascii=False) + "\n")
+		fout.write(json.dumps(i[1], ensure_ascii=False) + "\n")
